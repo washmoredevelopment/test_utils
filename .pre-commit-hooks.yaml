@@ -56,3 +56,64 @@
   entry: track_overrides
   language: python
   require_serial: true
+
+- id: add_translations
+  name: add_translations
+  description: "Get untranslated strings in app and translate them to the language specified"
+  entry: add_translations
+  language: python
+  require_serial: true
+
+- id: sql_docstring_formatter
+  name: sql_docstring_formatter
+  description: "Format SQL statements in Python docstrings"
+  entry: sql_docstring_formatter
+  language: python
+  types: [python]
+  additional_dependencies: ['sqlglot>=25.0.0']
+  args: ['--dialect', 'mysql']
+
+- id: sql_registry
+  name: SQL Registry
+  description: "Register SQL operations for tracking and potential rewriting"
+  entry: sql_registration
+  language: python
+  files: '\.py$'
+  require_serial: true
+  additional_dependencies: ['sqlglot>=25.0.0']
+  args: ['scan']
+
+- id: sql_rewriter
+  name: SQL Rewriter CLI
+  description: "Interactive tool for converting SQL calls to Query Builder"
+  entry: sql_registration
+  language: python
+  pass_filenames: false
+  always_run: true
+  require_serial: true
+  additional_dependencies: ['sqlglot>=25.0.0']
+  
+- id: bylines
+  name: bylines
+  description: "Add byline <div> in markdown files with authors from git history"
+  entry: bylines
+  language: python
+  require_serial: true
+
+- id: patch_linters
+  name: patch_linters
+  description: "Validate patches.txt matches patch files for ERPNext apps"
+  entry: patch_linters
+  language: python
+  require_serial: true
+  pass_filenames: false
+  args: []
+
+- id: validate_frappe_dependencies
+  name: validate_frappe_dependencies
+  description: "Validate that pyproject.toml declares bounded frappe/erpnext dependencies under [tool.bench.frappe-dependencies]"
+  entry: validate_frappe_dependencies
+  language: python
+  always_run: true
+  pass_filenames: false
+  require_serial: true
