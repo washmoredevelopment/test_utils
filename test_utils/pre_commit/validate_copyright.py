@@ -51,17 +51,19 @@ def validate_copyright(app, files):
 
 
 def validate_and_write_file(file, initial_string, copyright_string):
-	# using tempfile to avoid issues while reading large files
-	temp_file_path = tempfile.mktemp()
-	with open(file) as original_file, open(temp_file_path, "w") as temp_file:
+	with open(file) as original_file:
 		first_line = original_file.readline()
-		if not first_line.startswith(initial_string):
+		if first_line.startswith(initial_string):
+			return  # Already has copyright, nothing to do
+
+		with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".tmp") as temp_file:
+			temp_file_path = temp_file.name
 			temp_file.write(copyright_string)
 			temp_file.write(first_line)
 			temp_file.writelines(original_file)
 
-			# Replace the original file with the temp file
-			shutil.move(temp_file_path, file)
+	# Move AFTER both files are closed and flushed
+	shutil.move(temp_file_path, file)
 
 
 def main(argv: Sequence[str] = None):
